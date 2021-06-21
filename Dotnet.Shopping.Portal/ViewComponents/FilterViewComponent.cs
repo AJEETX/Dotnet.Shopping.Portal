@@ -137,7 +137,7 @@ namespace aspCart.Web.ViewComponents
             }
 
             List<int> range = new();
-            List<IGrouping<int, decimal>> groupings = new List<IGrouping<int, decimal>>();
+            List<IGrouping<int, decimal>> groupings = new();
             List<decimal> allPrices = allProducts.Select(x => x.Price).ToList();
 
             if (showPrice)
@@ -145,16 +145,18 @@ namespace aspCart.Web.ViewComponents
                 range = new List<int> { 0, 100, 250, 500, 750, 1000, 1500, 2000, 3000, 4000, 5000, 10000 };
                 groupings = allPrices.GroupBy(price => range.FirstOrDefault(r => r >= price)).ToList();
             }
-           
+
             //
             // result
             //
 
-            var result = new FilterViewModel();
-            result.CategoryFilterViewModel = categoryFilterViewModel;
-            result.ManufacturerFilterViewModel = manufacturerFilterViewModel;
-            result.PriceGroupings = groupings.OrderBy(x => x.Key);
-            result.PriceRange = range;
+            var result = new FilterViewModel
+            {
+                CategoryFilterViewModel = categoryFilterViewModel,
+                ManufacturerFilterViewModel = manufacturerFilterViewModel,
+                PriceGroupings = groupings.OrderBy(x => x.Key),
+                PriceRange = range
+            };
 
             if (nameFilter.Length > 0)
             {

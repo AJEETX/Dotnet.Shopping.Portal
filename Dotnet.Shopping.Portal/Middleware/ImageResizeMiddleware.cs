@@ -49,24 +49,22 @@ namespace Dotnet.Shopping.Portal.Middleware
                     // resize the image
                     if(w > 0 || h > 0)
                     {
-                        using (var input = System.IO.File.OpenRead(imagePath))
+                        using var input = System.IO.File.OpenRead(imagePath);
+                        var bitmap = SKBitmap.Decode(input);
+
+                        w = w == 0 ? bitmap.Width : w;
+                        h = h == 0 ? bitmap.Height : h;
+
+                        var scaledBitmap = bitmap.Resize(new SKImageInfo(w, h), SKBitmapResizeMethod.Lanczos3);
+
+                        using (var image = SKImage.FromBitmap(scaledBitmap))
+                        using (var data = image.Encode())
+                        using (var ms = new System.IO.MemoryStream())
                         {
-                            var bitmap = SKBitmap.Decode(input);
+                            data.SaveTo(ms);
+                            context.Response.Body.WriteAsync(ms.ToArray(), 0, ms.ToArray().Length);
 
-                            w = w == 0 ? bitmap.Width : w;
-                            h = h == 0 ? bitmap.Height : h;
-
-                            var scaledBitmap = bitmap.Resize(new SKImageInfo(w, h), SKBitmapResizeMethod.Lanczos3);
-
-                            using (var image = SKImage.FromBitmap(scaledBitmap))
-                            using (var data = image.Encode())
-                            using (var ms = new System.IO.MemoryStream())
-                            {
-                                data.SaveTo(ms);
-                                context.Response.Body.WriteAsync(ms.ToArray(), 0, ms.ToArray().Length);
-
-                                return Task.CompletedTask;
-                            }
+                            return Task.CompletedTask;
                         }
                     }
                 }

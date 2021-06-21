@@ -1015,7 +1015,7 @@ namespace Dotnet.Shopping.Portal.Helpers
             if (!context.Users.Any(u => u.UserName == user1.UserName))
             {
                 var passwordHasher = new PasswordHasher<ApplicationUser>();
-                var hashed = passwordHasher.HashPassword(user1, "11234");
+                var hashed = passwordHasher.HashPassword(user1, configuration.GetValue<string>("UserAccount:Password"));
                 user1.PasswordHash = hashed;
                 var userStore = new UserStore<ApplicationUser>(context);
                 await userStore.CreateAsync(user1);
