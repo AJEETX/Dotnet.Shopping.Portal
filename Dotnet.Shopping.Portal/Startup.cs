@@ -12,17 +12,41 @@ using Dotnet.Shopping.Portal.Services.Messages;
 using Dotnet.Shopping.Portal.Services.Sale;
 using Dotnet.Shopping.Portal.Services.Statistics;
 using Dotnet.Shopping.Portal.Services.User;
+using AutoMapper;
+using Dotnet.Shopping.Portal.Helpers;
+using Microsoft.Extensions.Hosting.Internal;
+using System;
+using Dotnet.Shopping.Portal.Middleware;
 
 namespace Dotnet.Shopping.Portal
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
+
+            if (env.IsDevelopment())
+            {
+                // For more details on using the user secret store see http://go.microsoft.com/fwlink/?LinkID=532709
+                builder.AddUserSecrets("aspnet-aspCart.Web-b7b6c0c8-2794-41a1-ad6c-528772b97f8a");
+            }
+
+            builder.AddEnvironmentVariables();
+            Configuration = builder.Build();
+            MapperConfiguration = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new AutoMapperProfileConfiguration());
+            });
+            WebHostEnvironment = env;
         }
 
-        public IConfiguration Configuration { get; }
+        private IWebHostEnvironment WebHostEnvironment;
+        public IConfigurationRoot Configuration { get; }
+        public MapperConfiguration MapperConfiguration { get; set; }
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -34,20 +58,32 @@ namespace Dotnet.Shopping.Portal
 
             services.Configure<AdminAccount>(Configuration.GetSection("AdminAccount"));
             services.Configure<UserAccount>(Configuration.GetSection("UserAccount"));
-            services.AddScoped<ICategoryService, CategoryService>();
-            services.AddScoped<IImageManagerService, ImageManagerService>();
-            services.AddScoped<IManufacturerService, ManufacturerService>();
-            //services.AddScoped<OrderService, OrderService>();
-            services.AddScoped<IProductService, ProductService>();
-            services.AddScoped<IReviewService, ReviewService>();
-            services.AddScoped<IBillingAddressService, BillingAddressService>();
-            services.AddScoped<ISpecificationService, SpecificationService>();
+            services.AddMvc();
+            services.AddDistributedMemoryCache();
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(60);
+            });
 
-            //services.AddScoped<OrderCountService, OrderCountService>();
-            services.AddScoped<IVisitorCountService, VisitorCountService>();
+            services.AddTransient<IBillingAddressService, BillingAddressService>();
+            services.AddTransient<ICategoryService, CategoryService>();
+            services.AddTransient<IImageManagerService, ImageManagerService>();
+            services.AddTransient<IManufacturerService, ManufacturerService>();
+            services.AddTransient<IOrderService, OrderService>();
+            services.AddTransient<IProductService, ProductService>();
+            services.AddTransient<IReviewService, ReviewService>();
+            services.AddTransient<ISpecificationService, SpecificationService>();
 
-            services.AddScoped<IContactUsService, ContactUsService>();
+            services.AddTransient<IOrderCountService, OrderCountService>();
+            services.AddTransient<IVisitorCountService, VisitorCountService>();
 
+            services.AddTransient<IContactUsService, ContactUsService>();
+
+            // singleton
+            services.AddSingleton(sp => MapperConfiguration.CreateMapper());
+            services.AddSingleton<ViewHelper>();
+            services.AddSingleton<DataHelper>();
+            services.AddSingleton(WebHostEnvironment.ContentRootFileProvider);
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
@@ -64,7 +100,11 @@ namespace Dotnet.Shopping.Portal
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
+            app.UseImageResize();
             app.UseStaticFiles();
+            app.UseStatusCodePages();
+            app.UseSession();
+            app.UseVisitorCounter();
 
             app.UseRouting();
 
@@ -78,6 +118,11 @@ namespace Dotnet.Shopping.Portal
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+            // apply migration
+            SampleDataProvider.ApplyMigration(app.ApplicationServices);
+
+            // seed default data
+            SampleDataProvider.Seed(app.ApplicationServices, Configuration);
         }
     }
 }

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Dotnet.Shopping.Portal.Models;
+using Dotnet.Shopping.Portal.ViewModels;
 
 namespace Dotnet.Shopping.Portal.Controllers
 {
@@ -27,12 +28,14 @@ namespace Dotnet.Shopping.Portal.Controllers
             var userRolesViewModel = new List<UserRolesViewModel>();
             foreach (ApplicationUser user in users)
             {
-                var thisViewModel = new UserRolesViewModel();
-                thisViewModel.UserId = user.Id;
-                thisViewModel.Email = user.Email;
-                thisViewModel.FirstName = user.FirstName;
-                thisViewModel.LastName = user.LastName;
-                thisViewModel.Roles = await GetUserRoles(user);
+                var thisViewModel = new UserRolesViewModel
+                {
+                    UserId = user.Id,
+                    Email = user.Email,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Roles = await GetUserRoles(user)
+                };
                 userRolesViewModel.Add(thisViewModel);
             }
             return View(userRolesViewModel);

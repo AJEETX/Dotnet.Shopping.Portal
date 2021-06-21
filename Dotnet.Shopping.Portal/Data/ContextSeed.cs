@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Dotnet.Shopping.Portal.Models;
+using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.EntityFrameworkCore;
 
 namespace Dotnet.Shopping.Portal.Data
 {
@@ -42,6 +44,16 @@ namespace Dotnet.Shopping.Portal.Data
                 }
 
             }
+        }
+    }
+    public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbContext>
+    {
+        public ApplicationDbContext CreateDbContext(string[] args)
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
+            optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=Dotnet.Shopping.Portal;Trusted_Connection=True;MultipleActiveResultSets=true");
+
+            return new ApplicationDbContext(optionsBuilder.Options);
         }
     }
 }

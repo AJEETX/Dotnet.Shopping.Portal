@@ -11,7 +11,7 @@ namespace Dotnet.Shopping.Portal.Services.Catalog
     {
         IList<Category> GetAllCategories();
         Category GetCategoryById(Guid id);
-
+        IList<Category> GetAllCategoriesWithoutParent();
         Category GetCategoryBySeo(string seo);
         Task InsertCategory(Category category);
         Task UpdateCategory(Category category);
@@ -96,6 +96,13 @@ namespace Dotnet.Shopping.Portal.Services.Catalog
                 _context.ProductCategoryMappings.Remove(mapping);
 
             await _context.SaveChangesAsync();
+        }
+
+        public IList<Category> GetAllCategoriesWithoutParent()
+        {
+            var entities = _context.Categories.Where(x => x.ParentCategoryId == Guid.Empty).OrderBy(x => x.Name).ToList();
+
+            return entities;
         }
     }
 }
