@@ -91,6 +91,14 @@ namespace Dotnet.Shopping.Portal.Controllers
 
             return View(productList.Take(8));
         }
+        public IActionResult About()
+        {
+            return View();
+        }
+        public IActionResult Privacy()
+        {
+            return View();
+        }
 
         // GET: /Home/ProductInfo ?? /Product/{seo}
         public IActionResult ProductInfo(string seo)

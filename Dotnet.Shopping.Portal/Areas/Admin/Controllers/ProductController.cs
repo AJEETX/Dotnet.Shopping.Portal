@@ -28,7 +28,7 @@ namespace Dotnet.Shopping.Portal.Areas.Admin.Controllers
         private readonly IMapper _mapper;
 
         private ISession Session => _httpContextAccessor.HttpContext.Session;
-        private string _sessionKey = "ProductModel";
+        private readonly string _sessionKey = "ProductModel";
 
         #endregion
 

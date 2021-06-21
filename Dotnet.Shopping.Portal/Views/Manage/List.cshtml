@@ -65,49 +65,50 @@
         </div>
     </div>
 </div>
-    <script>
-        $(function () {
-            $('tbody tr').on('click', function () {
-                let id = $(this).data('url');
-                if (typeof id !== 'undefined') {
-                    window.location.href = id;
+@RenderSection("Scripts", required: false)
+<script>
+    $(function () {
+        $('tbody tr').on('click', function () {
+            let id = $(this).data('url');
+            if (typeof id !== 'undefined') {
+                window.location.href = id;
+            }
+        });
+        // delete messages
+        $('#delete-messages').on('click', function () {
+            let ids = [];
+            let form = $('#listForm');
+            let checkboxArray = document.getElementsByName('ids');
+            // check if checkbox is checked
+            for (let i = 0; i < checkboxArray.length; i++) {
+                if (checkboxArray[i].checked)
+                    ids.push(checkboxArray[i].value);
+            }
+            // submit form
+            if (ids.length > 0) {
+                if (confirm("Are you sure you want to delete this item(s)?")) {
+                    form.submit();
                 }
-            });
-            // delete messages
-            $('#delete-messages').on('click', function () {
-                let ids = [];
-                let form = $('#listForm');
-                let checkboxArray = document.getElementsByName('ids');
-                // check if checkbox is checked
-                for (let i = 0; i < checkboxArray.length; i++) {
-                    if (checkboxArray[i].checked)
-                        ids.push(checkboxArray[i].value);
-                }
-                // submit form
-                if (ids.length > 0) {
-                    if (confirm("Are you sure you want to delete this item(s)?")) {
-                        form.submit();
-                    }
-                }
-            });
-            // check all or uncheck all
-            $('.checkall-toggle').on('click', function () {
-                var clicks = $(this).data('clicks');
-                if (clicks) {
-                    $('input[type="checkbox"]').iCheck('uncheck');
-                    $('.fa', this).removeClass('fa-check-square-o').addClass('fa-square-o');
-                    $('.fa', this).text(' Check all');
-                } else {
-                    $('input[type="checkbox"]').iCheck('check');
-                    $('.fa', this).removeClass('fa-square-o').addClass('fa-check-square-o');
-                    $('.fa', this).text(' Uncheck all');
-                }
-                $(this).data('clicks', !clicks);
-            });
-            // iCheck
-            $('input').iCheck({
-                checkboxClass: 'icheckbox_square-blue',
-                radioClass: 'iradio_square-blue',
-                increaseArea: '20%' // optional
-            });
-        });</script>
+            }
+        });
+        // check all or uncheck all
+        $('.checkall-toggle').on('click', function () {
+            var clicks = $(this).data('clicks');
+            if (clicks) {
+                $('input[type="checkbox"]').iCheck('uncheck');
+                $('.fa', this).removeClass('fa-check-square-o').addClass('fa-square-o');
+                $('.fa', this).text(' Check all');
+            } else {
+                $('input[type="checkbox"]').iCheck('check');
+                $('.fa', this).removeClass('fa-square-o').addClass('fa-check-square-o');
+                $('.fa', this).text(' Uncheck all');
+            }
+            $(this).data('clicks', !clicks);
+        });
+        // iCheck
+        $('input').iCheck({
+            checkboxClass: 'icheckbox_square-blue',
+            radioClass: 'iradio_square-blue',
+            increaseArea: '20%' // optional
+        });
+    });</script>

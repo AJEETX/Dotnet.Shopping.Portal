@@ -58,7 +58,7 @@ namespace Dotnet.Shopping.Portal
 
             services.Configure<AdminAccount>(Configuration.GetSection("AdminAccount"));
             services.Configure<UserAccount>(Configuration.GetSection("UserAccount"));
-            services.AddMvc();
+            services.AddMvc(options => options.EnableEndpointRouting = false);
             services.AddDistributedMemoryCache();
             services.AddSession(options =>
             {
@@ -110,7 +110,42 @@ namespace Dotnet.Shopping.Portal
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "areaRoute",
+                    template: "{area:exists}/{controller}/{action}/{id?}",
+                    defaults: new { controller = "Dashboard", action = "Index" });
 
+                routes.MapRoute(
+                    name: "productInfo",
+                    template: "Product/{seo}",
+                    defaults: new { controller = "Home", action = "ProductInfo" });
+
+                routes.MapRoute(
+                    name: "category",
+                    template: "Category/{category}",
+                    defaults: new { controller = "Home", action = "ProductCategory" });
+
+                routes.MapRoute(
+                    name: "manufacturer",
+                    template: "Manufacturer/{manufacturer}",
+                    defaults: new { controller = "Home", action = "ProductManufacturer" });
+
+                routes.MapRoute(
+                    name: "productSearch",
+                    template: "search/{name?}",
+                    defaults: new { controller = "Home", action = "ProductSearch" });
+
+                routes.MapRoute(
+                    name: "create review",
+                    template: "CreateReview/{id}",
+                    defaults: new { controller = "Home", action = "CreateReview" });
+
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}");
+            });
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

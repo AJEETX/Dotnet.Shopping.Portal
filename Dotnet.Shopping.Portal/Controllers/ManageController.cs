@@ -251,7 +251,7 @@ namespace Dotnet.Shopping.Portal.Controllers
         }
         public IActionResult Message(Guid id)
         {
-            if (id != null)
+            if (id != Guid.Empty)
             {
                 var messageEntity = _contactUsService.GetMessageById(id);
                 if (messageEntity != null)
