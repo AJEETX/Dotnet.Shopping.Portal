@@ -1,0 +1,124 @@
+﻿@page
+@model LoginModel
+@using Microsoft.Extensions.Options
+@inject SignInManager<Dotnet.Shopping.Portal.Models.ApplicationUser> SignInManager
+@inject IOptions<Dotnet.Shopping.Portal.Models.AdminAccount> AdminAccount
+@inject IOptions<Dotnet.Shopping.Portal.Models.UserAccount> UserAccount
+@{ ViewData["Title"] = "Log in"; }
+
+<h1>@ViewData["Title"]</h1>
+<div class="row">
+    <div class="col-md-4">
+        <section>
+            <form id="account" method="post">
+                <h4>Use a local account to log in.</h4>
+                <hr />
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Input.Email"></label>
+                    <input asp-for="Input.Email" class="form-control" value="superadmin@gmail.com" />
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Input.Password"></label>
+                    <input asp-for="Input.Password" class="form-control" value="123Pa$$word." />
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label asp-for="Input.RememberMe">
+                            <input asp-for="Input.RememberMe" />
+                            @Html.DisplayNameFor(m => m.Input.RememberMe)
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Log in</button>
+                </div>
+                <div class="form-group">
+                    <p>
+                        <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
+                    </p>
+                    <p>
+                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
+                    </p>
+                    <p>
+                        <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
+                    </p>
+                </div>
+            </form>
+        </section>
+    </div>
+    <div class="col-md-6 col-md-offset-2">
+        <section>
+            <h4>Use another service to log in.</h4>
+            <hr />
+            @{ if ((Model.ExternalLogins?.Count ?? 0) == 0)
+                {
+    <div>
+        <p>
+            There are no external authentication services configured. See <a href="https://go.microsoft.com/fwlink/?LinkID=532715">this article</a>
+            for details on setting up this ASP.NET application to support logging in via external services.
+        </p>
+    </div> }
+else
+{
+<form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+    <div>
+        <p>
+            @foreach (var provider in Model.ExternalLogins)
+            {
+<button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>}
+        </p>
+    </div>
+</form> } }
+        </section>
+        <section>
+            <h4>Admin Login Page</h4>
+            <hr />
+            <div class="text-danger">*This section is for development purposes only.</div>
+            <br />
+            @*<div class="row">
+                <div class="col-md-12">
+                    <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index" class="btn btn-primary">
+                        Admin dashboard
+                    </a>
+                </div>
+            </div>
+            <br />*@
+            <div class="row">
+                <div class="col-md-12">
+                    <div>Admin email: @AdminAccount.Value.Email</div>
+                    <div>Admin password: @AdminAccount.Value.Password</div>
+                    <button id="pasteTo" class="btn btn-primary"><span class="fa fa-lock"></span>&nbsp;Use this credentials</button>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-md-12">
+                    <div>User email: @UserAccount.Value.Email</div>
+                    <div>User password: @UserAccount.Value.Password</div>
+                    <button id="pasteTo2" class="btn btn-primary"><span class="fa fa-lock"></span>&nbsp;Use this credentials</button>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script>
+    $('#pasteTo').click(function () {
+        document.getElementById('Input_Email').value = "@Html.Raw(AdminAccount.Value.Email)";
+        document.getElementById('Input_Password').value = "@Html.Raw(AdminAccount.Value.Password)";
+        $('#account').submit();
+    });
+
+    $('#pasteTo2').click(function () {
+        document.getElementById('Input_Email').value = "@Html.Raw(UserAccount.Value.Email)";
+        document.getElementById('Input_Password').value = "@Html.Raw(UserAccount.Value.Password)";
+        $('#account').submit();
+    });
+</script>
