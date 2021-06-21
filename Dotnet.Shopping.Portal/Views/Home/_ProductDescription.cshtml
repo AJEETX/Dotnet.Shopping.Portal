@@ -1,0 +1,14 @@
+﻿@using Dotnet.Shopping.Portal.ViewModels
+@model ProductModel
+<div class="container">
+    <div class="col-md-12">
+        @if (Model.Description != null && Model.Description.Length > 0)
+        {
+            @Html.Raw(Model.Description)
+        }
+        else
+        {             
+            <div>No description yet</div>
+        }
+    </div>
+</div>
