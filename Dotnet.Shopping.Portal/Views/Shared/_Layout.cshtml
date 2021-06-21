@@ -7,6 +7,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Shopping</title>
+    <link href="~/plugins/fontawesome-free/css/all.css" rel="stylesheet" />
+    <link href="/dist/site.min.css" rel="stylesheet">
+    <script src="/dist/site.min.js"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
@@ -55,3 +58,24 @@
     @RenderSection("Scripts", required: false)
 </body>
 </html>
+<script>
+    $(function () {
+        if (JSON.parse(sessionStorage.getItem("isAdminMenuOpen")) === true) {
+            document.getElementById("admin-menu-body").style.transition = "0s";
+            document.getElementById("admin-menu-body").style.right = "0px";
+        }
+    });
+
+    $(function () {
+        $('#open-admin').on('click', function () {
+            document.getElementById("admin-menu-body").style.right = "0px";
+            sessionStorage.setItem("isAdminMenuOpen", JSON.stringify(true));
+        });
+
+        $('#close-admin').on('click', function () {
+            document.getElementById("admin-menu-body").style.transition = "0.5s";
+            document.getElementById("admin-menu-body").style.right = "-200px";
+            sessionStorage.setItem("isAdminMenuOpen", JSON.stringify(false));
+        });
+    });
+</script>

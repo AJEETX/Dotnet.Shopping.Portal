@@ -1,33 +1,75 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Http
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
-
+@{
+    string _cartItemsCountSessionKey = "CartItemsCount";
+}
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
     {
+        <li class="nav-item"><div class="dropdown-divider dd-mobile"></div></li>
+        <li class="nav-item">
+            <a asp-area="" asp-controller="Cart" asp-action="Index" class="nav-link mx-1 my-1">
+                <i class="fa fa-shopping-cart"></i>
+                @if (Context.Session.GetString(_cartItemsCountSessionKey) != null && Context.Session.GetInt32(_cartItemsCountSessionKey) != 0)
+                {
+                    @:Cart (@Context.Session.GetInt32(_cartItemsCountSessionKey).ToString())
+                }
+                else
+                {
+                    @:Cart
+                }
+            </a>
+        </li>
         <li class="nav-item" style="align-self: center;">
             @if (UserManager.GetUserAsync(User).Result.ProfilePicture != null)
             {
                 <img style="width:40px;height:40px; object-fit:cover; border-radius:30px" src="data:image/*;base64,@(Convert.ToBase64String(UserManager.GetUserAsync(User).Result.ProfilePicture))">
             }
         </li>
-        <li class="nav-item">
-            <a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity.Name!</a>
-        </li>
-        <li class="nav-item">
-            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                <button type="submit" class="btn nav-link">Logout</button>
-            </form>
+
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle my-1" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                @UserManager.GetUserName(User)
+            </a>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                <a asp-controller="Manage" asp-action="Index" class="dropdown-item">Manage</a>
+               
+                <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                    <button type="submit" class="btn nav-link">Logout</button>
+                </form>
+            </div>
         </li>
     }
     else
     {
-        <li class="nav-item">
-            <a class="nav-link" asp-area="Identity" asp-page="/Account/Register">Register</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" asp-area="Identity" asp-page="/Account/Login">Login</a>
-        </li>
+    <li class="nav-item"><div class="dropdown-divider dd-mobile"></div></li>
+    <li class="nav-item ">
+        <a asp-area="" asp-controller="Cart" asp-action="Index" class="nav-link mx-1 my-1">
+            <i class="fa fa-shopping-cart"></i>
+            @if (Context.Session.GetString(_cartItemsCountSessionKey) != null && Context.Session.GetInt32(_cartItemsCountSessionKey) != 0)
+            {
+                @:Cart (@Context.Session.GetInt32(_cartItemsCountSessionKey).ToString())
+            }
+            else
+            {
+                @:Cart
+            }
+        </a>
+    </li>
+
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle my-1" href="#" id="categoryDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fa fa-user"></i>
+        </a>
+        <div class="dropdown-menu" aria-labelledby="categoryDropdown">
+
+            <a class="btn btn-outline-primary navbar-btn mx-1 my-1" asp-area="Identity" asp-page="/Account/Login">Log in</a>
+            <a class="btn btn-outline-secondary navbar-btn mx-1 my-1" asp-area="Identity" asp-page="/Account/Register">Register</a>
+
+        </div>
+    </li>
     }
 </ul>
 

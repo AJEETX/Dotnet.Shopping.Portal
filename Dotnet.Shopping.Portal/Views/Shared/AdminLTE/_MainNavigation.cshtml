@@ -37,7 +37,7 @@
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <!-- Add icons to the links using the .nav-icon class
     with font-awesome or any other icon font library -->
-                @if (UserManager.GetUserName(User) == "admin")
+                @if (User.IsInRole("Admin"))
                 {
                     <li id="menu-dashboard"><a asp-controller="Dashboard" asp-action="Index"><i class="fa fa-dashboard"></i><span>Dashboard</span></a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Index"><i class="fa fa-tv"></i><span>Main Store</span></a></li>
