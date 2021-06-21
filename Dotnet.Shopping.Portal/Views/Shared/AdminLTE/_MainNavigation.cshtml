@@ -3,7 +3,7 @@
 
 <aside id="sideBar" class="main-sidebar elevation-4">
     <!-- Brand Logo -->
-    <a href="index3.html" class="brand-link">
+    <a class="brand-link">
         <img src="~/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">Dotnet.Shop</span>
     </a>
@@ -39,6 +39,8 @@
     with font-awesome or any other icon font library -->
                 @if (UserManager.GetUserName(User) == "admin")
                 {
+                    <li id="menu-dashboard"><a asp-controller="Dashboard" asp-action="Index"><i class="fa fa-dashboard"></i><span>Dashboard</span></a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Index"><i class="fa fa-tv"></i><span>Main Store</span></a></li>
                     <li class="nav-item menu-open">
                         <a href="#" class="nav-link active">
                             <i class="nav-icon fas fa-tachometer-alt"></i>
