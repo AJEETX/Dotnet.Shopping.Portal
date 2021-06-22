@@ -1,7 +1,11 @@
 ﻿@{
     ViewData["Title"] = ViewData["ContentHeader"] = "Image Manager";
 }
-
+<style>
+    .caption{
+        font-size:smaller;
+    }
+</style>
 @section menu {
     <script type="text/javascript">
         $(function () {
@@ -66,9 +70,9 @@
                 <div class ="thumbnail">
                     <input type="checkbox" name="deleteCheckBox" value="imgId" />
                     <button type="button" id="btnCopyToClipboard" class ="pull-right btn-xs">Copy image link</button>
-                    <img src="imgSrcHolder" id="imgSrcId" class ="thumbnail-img imageSource" alt="imgAlt" title="imgTitle">
+                    <img height="100" src="imgSrcHolder" id="imgSrcId" class ="thumbnail-img imageSource" alt="imgAlt" title="imgTitle">
                     <div class ="caption">
-                        <h3 class ="thumbnail-title" title="labelImageTitle">labelImageFileName</h3>
+                        <p class ="thumbnail-title" title="labelImageTitle">labelImageFileName</p>
                     </div>
                 </div>
             </div>
@@ -76,10 +80,10 @@
         // replace placeholder value of the template
         var newInput = template.replace('imgSrcHolder', item.fileName);
         newInput = newInput.replace('hiddenValue', item.id);
-        newInput = newInput.replace('imgAlt', item.fileName);
-        newInput = newInput.replace('imgTitle', item.fileName);
-        newInput = newInput.replace('labelImageTitle', item.fileName);
-        newInput = newInput.replace('labelImageFileName', item.fileName);
+        newInput = newInput.replace('imgAlt', item.fileName.replace(/^.*[\\\/]/, ''));
+        newInput = newInput.replace('imgTitle', item.fileName.replace(/^.*[\\\/]/, ''));
+        newInput = newInput.replace('labelImageTitle', item.fileName.replace(/^.*[\\\/]/, ''));
+        newInput = newInput.replace('labelImageFileName', item.fileName.replace(/^.*[\\\/]/, ''));
         newInput = newInput.replace('imgId', item.id);
         newInput = newInput.replace('imgSrcId', 'img-' + item.id);
 
