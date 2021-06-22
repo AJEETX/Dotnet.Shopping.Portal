@@ -3,7 +3,11 @@
 @{
     ViewData["Title"] = ViewData["ContentHeader"] = "Product List";
 }
-
+<style>
+    img{
+        height:100;
+    }
+</style>
 @section menu {
     <script type="text/javascript">
         $(function () {
@@ -48,11 +52,11 @@
                                     <td>
                                         @if (product.MainImage != null)
                                         {
-                                            <img src="@product.MainImage" class="product-img-sm" />
+                                            <img height="100" src="@product.MainImage" class="product-img-sm" />
                                         }
                                         else
                                         {
-                                            <img src="~/images/system/no-image.png" class="product-img-sm" />
+                                            <img height="100" src="~/images/system/no-image.png" class="product-img-sm" />
                                         }
 
                                     </td>

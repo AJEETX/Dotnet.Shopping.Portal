@@ -7,6 +7,9 @@
 
     <title>AdminLTE 3 | Starter</title>
     <partial name="AdminLTE/_Styles" />
+    <script src="/plugins/jquery/jquery.js"></script>
+    <script src="~/lib/morris.js"></script>
+    <script src="~/lib/raphael.js"></script>
 </head>
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
@@ -43,6 +46,9 @@
         <partial name="AdminLTE/_Footer" />
     </div>
     <partial name="AdminLTE/_Scripts" />
+    @RenderSection("menu", required: false)
+    @RenderSection("actionHeader", required: false)
+    @RenderSection("Scripts", required: false)
 </body>
 </html>
-@RenderSection("Scripts", required: false)
+

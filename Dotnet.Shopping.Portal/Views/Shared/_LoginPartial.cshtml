@@ -34,10 +34,13 @@
                 @UserManager.GetUserName(User)
             </a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                <a asp-controller="Manage" asp-action="Index" class="dropdown-item">Manage</a>
-               
+                <a asp-controller="Manage" asp-action="Index" class="btn btn-outline-primary navbar-btn mx-1 my-1">Manage</a>
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-controller="Admin" asp-action="Index" class="btn btn-outline-secondary navbar-btn mx-1 my-1">Shop admin</a>
+                }
                 <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                    <button type="submit" class="btn nav-link">Logout</button>
+                    <button type="submit" class="btn btn-outline-warning navbar-btn mx-1 my-1">Logout</button>
                 </form>
             </div>
         </li>

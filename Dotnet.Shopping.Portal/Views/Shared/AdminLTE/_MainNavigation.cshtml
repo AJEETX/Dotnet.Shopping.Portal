@@ -39,10 +39,9 @@
     with font-awesome or any other icon font library -->
                 @if (User.IsInRole("Admin"))
                 {
-                    <li id="menu-dashboard"><a asp-controller="Dashboard" asp-action="Index"><i class="fa fa-dashboard"></i><span>Dashboard</span></a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Index"><i class="fa fa-tv"></i><span>Main Store</span></a></li>
                     <li class="nav-item menu-open">
-                        <a href="#" class="nav-link active">
+                        <a href="/Admin" class="nav-link active">
                             <i class="nav-icon fas fa-tachometer-alt"></i>
                             <p>
                                 Dashboard
@@ -64,7 +63,22 @@
                             </li>
                         </ul>
                     </li>
-
+                    <li id="menu-catalog" class="treeview">
+                        <!-- catalog tree bar -->
+                        <a href="#">
+                            <i class="fa fa-book"></i> <span>Catalog</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a id="menu-catalog-product" asp-controller="Product" asp-action="List"><i class="fa fa-circle-o"></i><span>Product</span></a></li>
+                            <li><a id="menu-catalog-category" asp-controller="Category" asp-action="List"><i class="fa fa-circle-o"></i><span>Category</span></a></li>
+                            <li><a id="menu-catalog-manufacturer" asp-controller="Manufacturer" asp-action="List"><i class="fa fa-circle-o"></i><span>Manufacturer</span></a></li>
+                            <li><a id="menu-catalog-specification" asp-controller="Specification" asp-action="List"><i class="fa fa-circle-o"></i><span>Specification</span></a></li>
+                            <li><a id="menu-catalog-imageManager" asp-controller="ImageManager" asp-action="Index"><i class="fa fa-circle-o"></i><span>Image Manager</span></a></li>
+                        </ul>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" asp-area="" asp-controller="UserRoles" asp-action="Index">User Roles</a>
                     </li>
